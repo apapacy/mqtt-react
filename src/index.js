@@ -27,8 +27,8 @@ function init() {
     keepalive: 60, //  seconds, set to 0 to disable
     reschedulePings: true, //reschedule ping messages after sending packets (default true)
     clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
-    // protocolId: 'MQTT',
-    // protocolVersion: 5,
+    protocolId: 'MQTT',
+    protocolVersion: 5,
     clean: false, // set to false to receive QoS 1 and 2 messages while offline
     reconnectPeriod: 1000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
     connectTimeout: 30 * 1000, // milliseconds, time to wait before a CONNACK is received
@@ -86,7 +86,7 @@ function init() {
   client.on('message', function (topic, message) {
     // message is Buffer
     console.log(message.toString())
-    client.end()
+    // client.end()
   });
 }
 
