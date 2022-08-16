@@ -26,7 +26,7 @@ function init() {
     wsOptions: {}, // is the WebSocket connection options. Default is {}. It's specific for WebSockets. For possible options have a look at: https://github.com/websockets/ws/blob/master/doc/ws.md.
     keepalive: 60, //  seconds, set to 0 to disable
     reschedulePings: true, //reschedule ping messages after sending packets (default true)
-    clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
+    clientId: 'mqttjs_', // + Math.random().toString(16).substr(2, 8),
     protocolId: 'MQTT',
     protocolVersion: 5,
     clean: false, // set to false to receive QoS 1 and 2 messages while offline
@@ -55,9 +55,9 @@ function init() {
     },
      will: { // a message that will sent by the broker automatically when the client disconnect badly. The format is:
        topic: 'will', // the topic to publis
-       payload: 'abnormal end of connection', // the message to publish
-       qos: 1, // the QoS
-       retain: true, // the retain flag
+       payload: 'abnormal end of connection react', // the message to publish
+       qos: 2, // the QoS
+       retain: false, // the retain flag
        properties: { //properties of will by MQTT 5.0:
          willDelayInterval: 15, // representing the Will Delay Interval in seconds number,
          payloadFormatIndicator: true, // Will Message is UTF-8 Encoded Character Data or not boolean,
@@ -83,9 +83,9 @@ function init() {
     })
   });
 
-  client.on('message', function (topic, message) {
+  client.on('message', function (...args) {
     // message is Buffer
-    console.log(message.toString())
+    console.log(args, args[1].toString())
     // client.end()
   });
 }
