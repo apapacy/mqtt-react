@@ -55,7 +55,9 @@ export async function auth(sub) {
 }
 
 export async function password() {
-  const { data: { password } } = await client.get('api/auth/mqtt/password');
-  sessionStorage.setItem('MQTT_PASSWORD', password);
+  const clientId = sessionStorage.getItem('CLIENT_ID');
+  const { data } = await client.post('api/auth/mqtt/password', { clientId });
+  sessionStorage.setItem('MQTT_PASSWORD', data.password);
+  sessionStorage.setItem('CLIENT_ID', data.clientId);
   return password;
 }

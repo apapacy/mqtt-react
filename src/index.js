@@ -67,13 +67,14 @@ async function init() {
          payloadFormatIndicator: true, // Will Message is UTF-8 Encoded Character Data or not boolean,
          messageExpiryInterval: 3600, // value is the lifetime of the Will Message in seconds and is sent as the Publication Expiry Interval when the Server publishes the Will Message number,
          // contentType: 'text/plain', // describing the content of the Will Message string,
-         // responseTopic: 'will/response', // String which is used as the Topic Name for a response message string,
+         // responseTopic: 'will/response', // String which user.client_id === body.clientIdis used as the Topic Name for a response message string,
         // correlationData: The Correlation Data is used by the sender of the Request Message to identify which request the Response Message is for when it is received binary,
         // userProperties: The User Property is allowed to appear multiple times to represent multiple name, value pairs object
        },
     },
     transformWsUrl: (url, options, client) => { // url function For ws/wss protocols only. Can be used to implement signing urls which upon reconnect can have become expired.
       options.password = sessionStorage.getItem('MQTT_PASSWORD');
+      options.clientId = sessionStorage.getItem('CLIENT_ID');
       console.log('transform ws url', options)
       return url;
     },
