@@ -30,7 +30,7 @@ function init() {
     protocolId: 'MQTT',
     protocolVersion: 5,
     clean: false, // set to false to receive QoS 1 and 2 messages while offline
-    reconnectPeriod: 1000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
+    reconnectPeriod: 10000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
     connectTimeout: 30 * 1000, // milliseconds, time to wait before a CONNACK is received
     username: 'test', // the username required by your broker, if any
     password: 'password', // the password required by your broker, if any
@@ -68,14 +68,27 @@ function init() {
         // userProperties: The User Property is allowed to appear multiple times to represent multiple name, value pairs object
        },
     },
-    // transformWsUrl : optional (url, options, client) => url function For ws/wss protocols only. Can be used to implement signing urls which upon reconnect can have become expired.
+    transformWsUrl: (url, options, client) => { // url function For ws/wss protocols only. Can be used to implement signing urls which upon reconnect can have become expired.
+      options.password = `token=${sessionStorage.password}`;
+      console.log('transform ws url', options)
+      return url;
+    },
     // resubscribe : if connection is broken and reconnects, subscribed topics are automatically subscribed again (default true)
     // messageIdProvider: custom messageId provider. when new UniqueMessageIdProvider() is set, then non conflict messageId is provided.
    };
 
   const client  = mqtt.connect('ws://127.0.0.1:8080/mqtt', options);
 
+  client.on('error', function(...args) {
+    console.log('on error', args)
+  });
+
+  client.on('reconnect', function(...args) {
+    console.log('on reconnect', args)
+  });
+
   client.on('connect', function () {
+    console.log('on connect');
     client.subscribe('#', function (err) {
       if (!err) {
         client.publish('presence', 'Hello mqtt')
@@ -86,8 +99,10 @@ function init() {
   client.on('message', function (...args) {
     // message is Buffer
     console.log(args, args[1].toString())
-    // client.end()
+    //client.end()
   });
+
+
 }
 
 init();
