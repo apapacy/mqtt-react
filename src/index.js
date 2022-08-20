@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { client, auth, password } from './client';
 
 const buffer = require('buffer');
 window.Buffer = buffer.Buffer;
@@ -21,19 +22,22 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-function init() {
+async function init() {
+  await auth('1234567');
+  await password();
+  setInterval(password, 5000);
   const options = {
     wsOptions: {}, // is the WebSocket connection options. Default is {}. It's specific for WebSockets. For possible options have a look at: https://github.com/websockets/ws/blob/master/doc/ws.md.
-    keepalive: 60, //  seconds, set to 0 to disable
+    keepalive: 20, //  seconds, set to 0 to disable
     reschedulePings: true, //reschedule ping messages after sending packets (default true)
     clientId: 'mqttjs_', // + Math.random().toString(16).substr(2, 8),
     protocolId: 'MQTT',
     protocolVersion: 5,
     clean: false, // set to false to receive QoS 1 and 2 messages while offline
-    reconnectPeriod: 10000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
+    reconnectPeriod: 60000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
     connectTimeout: 30 * 1000, // milliseconds, time to wait before a CONNACK is received
     username: 'test', // the username required by your broker, if any
-    password: 'password', // the password required by your broker, if any
+    // password: 'password', // the password required by your broker, if any
     // incomingStore: a Store for the incoming packets
     // outgoingStore: a Store for the outgoing packets
     // queueQoSZero: true, // if connection is broken, queue outgoing QoS zero messages (default true)
@@ -69,7 +73,7 @@ function init() {
        },
     },
     transformWsUrl: (url, options, client) => { // url function For ws/wss protocols only. Can be used to implement signing urls which upon reconnect can have become expired.
-      options.password = `token=${sessionStorage.password}`;
+      options.password = sessionStorage.get('MQTT_PASSWORD');
       console.log('transform ws url', options)
       return url;
     },
