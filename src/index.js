@@ -73,7 +73,7 @@ async function init() {
        },
     },
     transformWsUrl: (url, options, client) => { // url function For ws/wss protocols only. Can be used to implement signing urls which upon reconnect can have become expired.
-      options.password = sessionStorage.get('MQTT_PASSWORD');
+      options.password = sessionStorage.getItem('MQTT_PASSWORD');
       console.log('transform ws url', options)
       return url;
     },
