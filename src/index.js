@@ -23,20 +23,22 @@ root.render(
 reportWebVitals();
 
 async function init() {
-  await auth('1234567');
+  await auth('userId');
   await password();
   setInterval(password, 5000);
   const options = {
-    wsOptions: {}, // is the WebSocket connection options. Default is {}. It's specific for WebSockets. For possible options have a look at: https://github.com/websockets/ws/blob/master/doc/ws.md.
+    wsOptions: {
+      followRedirects: true,
+    }, // is the WebSocket connection options. Default is {}. It's specific for WebSockets. For possible options have a look at: https://github.com/websockets/ws/blob/master/doc/ws.md.
     keepalive: 20, //  seconds, set to 0 to disable
     reschedulePings: true, //reschedule ping messages after sending packets (default true)
-    clientId: 'mqttjs_', // + Math.random().toString(16).substr(2, 8),
+    clientId: sessionStorage.getItem('CLIENT_ID'), // + Math.random().toString(16).substr(2, 8),
     protocolId: 'MQTT',
     protocolVersion: 5,
     clean: false, // set to false to receive QoS 1 and 2 messages while offline
     reconnectPeriod: 60000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
     connectTimeout: 30 * 1000, // milliseconds, time to wait before a CONNACK is received
-    username: 'test', // the username required by your broker, if any
+    username: 'userId', // the username required by your broker, if any
     // password: 'password', // the password required by your broker, if any
     // incomingStore: a Store for the incoming packets
     // outgoingStore: a Store for the outgoing packets
@@ -82,7 +84,7 @@ async function init() {
     // messageIdProvider: custom messageId provider. when new UniqueMessageIdProvider() is set, then non conflict messageId is provided.
    };
 
-  const client  = mqtt.connect('ws://127.0.0.1:8080/mqtt', options);
+  const client  = mqtt.connect('ws://127.0.0.1:3080/mqtt', options);
 
   client.on('error', function(...args) {
     console.log('on error', args)
