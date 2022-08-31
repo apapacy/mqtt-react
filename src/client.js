@@ -34,7 +34,7 @@ client.interceptors.response.use(
     if (error.response.status === 419 && !config._retry) {
       const token = sessionStorage.getItem('REFRESH_TOKEN');
       client.defaults.headers.common.Authorization = `Bearer ${token}`;
-      const response = await client.get("api/auth/token/refresh");
+      const response = await client.get("api/auth/token");
       const { accessToken, refreshToken } = response.data;
       sessionStorage.setItem('ACCESS_TOKEN', accessToken);
       sessionStorage.setItem('REFRESH_TOKEN', refreshToken);
@@ -48,7 +48,7 @@ client.interceptors.response.use(
 );
 
 export async function auth(sub) {
-  const { data: { accessToken, refreshToken } } = await client.post('api/auth/token/create', { sub });
+  const { data: { accessToken, refreshToken } } = await client.post('auth/token', { sub });
   sessionStorage.setItem('ACCESS_TOKEN', accessToken);
   sessionStorage.setItem('REFRESH_TOKEN', refreshToken);
   client.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
@@ -57,7 +57,7 @@ export async function auth(sub) {
 
 export async function password() {
   const clientId = sessionStorage.getItem('CLIENT_ID');
-  const { data } = await client.post('api/auth/mqtt/password', { clientId });
+  const { data } = await client.post('auth/mqtt', { clientId });
   sessionStorage.setItem('MQTT_PASSWORD', data.password);
   sessionStorage.setItem('CLIENT_ID', data.clientId);
   return password;
