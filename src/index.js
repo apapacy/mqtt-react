@@ -59,7 +59,7 @@ async function init() {
       // authenticationData: Binary Data containing authentication data binary
       // authPacket: settings for auth packet object
     },
-     will: { // a message that will sent by the broker automatically when the client disconnect badly. The format is:
+    /* will: { // a message that will sent by the broker automatically when the client disconnect badly. The format is:
        topic: 'will', // the topic to publis
        payload: 'abnormal end of connection react', // the message to publish
        qos: 2, // the QoS
@@ -73,7 +73,7 @@ async function init() {
         // correlationData: The Correlation Data is used by the sender of the Request Message to identify which request the Response Message is for when it is received binary,
         // userProperties: The User Property is allowed to appear multiple times to represent multiple name, value pairs object
        },
-    },
+    },*/
     transformWsUrl: (url, options, client) => { // url function For ws/wss protocols only. Can be used to implement signing urls which upon reconnect can have become expired.
       options.password = sessionStorage.getItem('MQTT_PASSWORD');
       options.clientId = sessionStorage.getItem('CLIENT_ID');
@@ -96,11 +96,14 @@ async function init() {
 
   client.on('connect', function () {
     console.log('on connect');
-    client.subscribe('#', function (err) {
-      if (!err) {
-        client.publish('presence', 'Hello mqtt')
-      }
-    })
+    const subscribe = JSON.parse(sessionStorage.getItem('SUBSCRIBE'));
+    for (let i = 0; i < subscribe.length; i++) {
+      client.subscribe(subscribe[i], function (err) {
+        if (!err) {
+          client.publish(subscribe[i], `Hello mqtt from ${subscribe[i]}`)
+        }
+      });
+    }
   });
 
   client.on('message', function (...args) {
