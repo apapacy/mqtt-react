@@ -23,7 +23,7 @@ root.render(
 reportWebVitals();
 
 async function init() {
-  await auth('userId');
+  await auth(1);
   await password();
   setInterval(password, 5000);
   const options = {
@@ -38,7 +38,7 @@ async function init() {
     clean: false, // set to false to receive QoS 1 and 2 messages while offline
     reconnectPeriod: 60000, // milliseconds, interval between two reconnections. Disable auto reconnect by setting to 0.
     connectTimeout: 30 * 1000, // milliseconds, time to wait before a CONNACK is received
-    username: 'userId', // the username required by your broker, if any
+    username: '1', // the username required by your broker, if any
     // password: 'password', // the password required by your broker, if any
     // incomingStore: a Store for the incoming packets
     // outgoingStore: a Store for the outgoing packets

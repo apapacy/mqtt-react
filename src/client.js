@@ -47,8 +47,8 @@ client.interceptors.response.use(
   }
 );
 
-export async function auth(sub) {
-  const { data: { accessToken, refreshToken } } = await client.post('auth/token', { sub });
+export async function auth(id) {
+  const { data: { accessToken, refreshToken } } = await client.post('auth/token', { id });
   sessionStorage.setItem('ACCESS_TOKEN', accessToken);
   sessionStorage.setItem('REFRESH_TOKEN', refreshToken);
   client.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
